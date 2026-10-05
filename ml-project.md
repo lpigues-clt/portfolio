@@ -36,7 +36,7 @@ Florida Realtors. (2025, June 12). *How education is shaping homeownership*. htt
 
 I pulled this data live from the U.S. Census Bureau's American Community Survey 5 year estimates, using the Census API. I used the 5 year dataset instead of the 1 year version because 1 year estimates exclude any county under 65,000 people. Using it would have quietly cut out most of rural America and skewed the whole dataset toward big counties.
 
-Each row represents one U.S. county. After pulling data and dropping rows with missing or invalid values, I ended up with [FILL IN: final row count from Cell 3 output] counties out of roughly 3,144 nationwide. The features I pulled were total population, median household income, median home value, and the count of residents with a bachelor's degree, which I then converted into an education rate.
+Each row represents one U.S. county. After pulling data and dropping rows with missing or invalid values, I ended up with 3,216 counties and county equivalents out of roughly 3,144 counties nationwide, since the Census Bureau also counts some independent cities and other county equivalents separately.
 
 Missing values were minimal. Most counties report all four core variables, and the ones that didn't were dropped rather than estimated, which I come back to in the limitations section.
 
@@ -100,11 +100,11 @@ R² tells me what percentage of the variation in home value my model actually ex
 
 | Model | RMSE | MAE | R² |
 |---|---|---|---|
-| Baseline (Mean) | [FILL IN] | [FILL IN] | [FILL IN] |
-| Linear Regression | [FILL IN] | [FILL IN] | [FILL IN] |
-| Random Forest | [FILL IN] | [FILL IN] | [FILL IN] |
+| Baseline (Mean) | $139,133 | $90,559 | 0.001 |
+| Linear Regression | $97,805 | $60,804 | 0.505 |
+| Random Forest | $69,990 | $45,344 | 0.747 |
 
-[FILL IN: a sentence or two comparing the models using your real numbers, then name which model you picked as final and why, tied to a specific metric].
+Random Forest clearly outperformed both the baseline and Linear Regression on every metric. It cut RMSE by about $27,800 compared to Linear Regression, and explained roughly 75 percent of the variation in county home values compared to about 50 percent for the linear model. I selected Random Forest as my final model. The gap between the two models tells me the relationship between these features and home value isn't a simple straight line, which lines up with what I found when I looked at feature importance below.
 
 </div>
 
@@ -112,11 +112,13 @@ R² tells me what percentage of the variation in home value my model actually ex
 
 ## Model Interpretation and Insights
 
-Looking at the Random Forest's feature importance, [FILL IN: which feature ranked highest in your Cell 14 chart] carried the most weight in the model's predictions, followed by [FILL IN: second feature]. This [FILL IN: matches or doesn't match] what the correlation heatmap suggested early on.
+Looking at the Random Forest's feature importance, Median_Income carried the most weight by a wide margin, followed by Bachelors_Rate, with Total_Population mattering the least.
 
-The actual versus predicted plot shows the model tracking real home values reasonably well in the middle of the range, but [FILL IN: describe what you actually see, such as whether it struggles more with very expensive counties]. The residual plot backs this up. [FILL IN: describe whether residuals look randomly scattered around zero or follow a pattern].
+This genuinely surprised me, because it does not match what the correlation heatmap suggested earlier. On its own, Median_Income had almost no linear correlation with home value, while Bachelors_Rate showed a much stronger simple correlation. The explanation is that income's relationship with home value is not a straight line nationally. A high income county on the coast and a high income county in a lower cost region can have very different home values, so a simple correlation washes that out. Random Forest can split income into different ranges and combine it with the other features, which lets it pick up on that pattern in a way a linear correlation cannot.
 
-What I can conclude is that income and education together explain a meaningful share of county level home value variation, but they're clearly not the whole story. Local market conditions, housing supply, and geography almost certainly matter too, and this model doesn't see any of that.
+The actual versus predicted plot shows the model tracking real home values closely for most counties, but it struggles the most with the most expensive counties, consistently underpredicting some of them by over $400,000 and overpredicting a few others by a similar amount. The residual plot confirms this. Most residuals cluster close to zero, but the spread widens noticeably at the high end, which tells me the model is missing something about what drives home values in the most expensive housing markets, almost certainly factors like land scarcity, coastal location, or local demand that are not captured by income, population, or education alone.
+
+What I can conclude is that income and education together explain a meaningful share of county level home value variation, but they are clearly not the whole story, especially at the extremes. Local market conditions, housing supply, and geography almost certainly matter too, and this model does not see any of that.
 
 </div>
 
