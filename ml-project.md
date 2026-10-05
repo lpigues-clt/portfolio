@@ -4,7 +4,7 @@
 
 ## Problem Definition
 
-I wanted to look at something with real stakes: can a county's median home value be predicted just from how much people earn and how educated the population is? This is a **regression problem** — I'm predicting a continuous number (median home value in dollars), not a category.
+I wanted to look at something with real stakes: can a county's median home value be predicted just from how much people earn and how educated the population is? This is a **regression problem** I'm predicting a continuous number (median home value in dollars), not a category.
 
 The target variable is **Median_Home_Value**. People who might actually care about this: lenders assessing risk, local policymakers trying to understand housing affordability pressure, and real estate analysts looking at which counties are undervalued relative to their income and education levels.
 
@@ -40,7 +40,7 @@ I pulled this data live from the **U.S. Census Bureau's American Community Surve
 
 Each row represents **one U.S. county**. After pulling data and dropping rows with missing or invalid values, I ended up with **[FILL IN: final row count from Cell 3 output]** counties out of roughly 3,144 nationwide. The features I pulled were total population, median household income, median home value, and the count of residents with a bachelor's degree, which I then converted into an education rate.
 
-Missing values were minimal — most counties report all four core variables, and the ones that didn't were dropped rather than estimated, which I'll come back to in the limitations section.
+Missing values were minimal and most counties report all four core variables, and the ones that didn't were dropped rather than estimated, which I'll come back to in the limitations section.
 
 </div>
 
@@ -48,9 +48,9 @@ Missing values were minimal — most counties report all four core variables, an
 
 ## Data Understanding and Exploration
 
-Before modeling anything, I looked at how these variables actually behaved. Income and population were both right-skewed — a small number of very large or very wealthy counties pull the average upward, while most counties cluster lower. Home value showed the same pattern, which made sense once I saw the income skew, since the two are clearly related.
+Before modeling anything, I looked at how these variables actually behaved. Income and population were both right-skewed, a small number of very large or very wealthy counties pull the average upward, while most counties cluster lower. Home value showed the same pattern, which made sense once I saw the income skew, since the two are clearly related.
 
-The correlation heatmap confirmed what I expected but also sharpened it: income had a noticeably stronger relationship with home value than population did on its own. The scatter plot added a layer I hadn't initially appreciated — counties with higher bachelor's degree rates weren't just wealthier, they tended to sit above the general income-to-home-value trend line, suggesting education might carry information that income alone doesn't fully capture.
+The correlation heatmap confirmed what I expected but also sharpened it: income had a noticeably stronger relationship with home value than population did on its own. The scatter plot added a layer I hadn't initially appreciated. Counties with higher bachelor's degree rates weren't just wealthier, they tended to sit above the general income-to-home-value trend line, suggesting education might carry information that income alone doesn't fully capture.
 
 This is exactly why I included Bachelors_Rate as its own feature rather than assuming income would cover it.
 
@@ -66,7 +66,7 @@ I engineered one new feature: **Bachelors_Rate**, dividing bachelor's degree cou
 
 I selected three features for modeling: Median_Income, Total_Population, and Bachelors_Rate. I left out the raw bachelor's count specifically to avoid redundancy with the rate version.
 
-For training, I used an 80/20 train-test split with a fixed random seed so results are reproducible. I scaled all three features using StandardScaler, but — importantly — I fit the scaler only on the training data and applied that same transformation to the test data. If I'd fit the scaler on the full dataset before splitting, information from the test set would have leaked into training, making my evaluation artificially optimistic.
+For training, I used an 80/20 train-test split with a fixed random seed so results are reproducible. I scaled all three features using StandardScaler, but importantly, I fit the scaler only on the training data and applied that same transformation to the test data. If I'd fit the scaler on the full dataset before splitting, information from the test set would have leaked into training, making my evaluation artificially optimistic.
 
 </div>
 
@@ -74,13 +74,13 @@ For training, I used an 80/20 train-test split with a fixed random seed so resul
 
 ## Baseline and Model Development
 
-My baseline was a dummy model that just predicts the mean home value every time, regardless of input. This sounds almost too simple to count, but it's the right baseline: any real model needs to beat "just guessing the average" to prove it's learning something.
+My baseline was a dummy model that just predicts the mean home value every time, regardless of input. This sounds almost too simple to count, but it's the right baseline: any real model needs to beat just guessing the average to prove it's learning something.
 
 I trained two real models:
 
-**Linear Regression** — I chose this first because it's interpretable. I can look directly at the coefficients and say exactly how much each feature moves the prediction, which matters for a problem like this where the "why" is as interesting as the "what."
+**Linear Regression** I chose this first because it's interpretable. I can look directly at the coefficients and say exactly how much each feature moves the prediction, which matters for a problem like this where the "why" is as interesting as the "what."
 
-**Random Forest Regressor** — I chose this second because it can pick up on non-linear relationships and interactions between features that a straight line can't. Given what I saw in the exploration step (education appearing to shift the income-home value relationship rather than just adding to it), a model that can capture that kind of interaction felt worth testing.
+**Random Forest Regressor** I chose this second because it can pick up on non-linear relationships and interactions between features that a straight line can't. Given what I saw in the exploration step (education appearing to shift the income-home value relationship rather than just adding to it), a model that can capture that kind of interaction felt worth testing.
 
 I didn't do extensive hyperparameter tuning beyond setting a reasonable tree depth (max_depth=8) and number of trees (200) for the Random Forest, mainly to avoid overfitting on a dataset with this much natural variance.
 
@@ -124,9 +124,9 @@ What I can conclude: income and education together explain a meaningful share of
 
 ## Limitations, Ethics, and Reflection
 
-This dataset has real gaps. It only captures income, population, and education — it says nothing about housing supply, zoning, local amenities, or regional cost-of-living differences, all of which genuinely drive home values. A model like this could be misleading if used on its own for something like loan risk assessment, since it would systematically miss counties where home values are high or low for reasons unrelated to income or education (tourist destinations, areas with strict zoning, etc.).
+This dataset has real gaps. It only captures income, population, and education. It says nothing about housing supply, zoning, local amenities, or regional cost-of-living differences, all of which genuinely drive home values. A model like this could be misleading if used on its own for something like loan risk assessment, since it would systematically miss counties where home values are high or low for reasons unrelated to income or education (tourist destinations, areas with strict zoning, etc.).
 
-If this kind of model were used in a real decision-making context — say, flagging counties as "overvalued" or "undervalued" for investment — a false prediction could unfairly steer resources away from or toward a community based on an incomplete picture. I wouldn't consider this model appropriate for real financial decision-making as-is; it's better suited as an exploratory tool for understanding broad national patterns, not as a decision engine for any single county.
+If this kind of model were used in a real decision making context say, flagging counties as "overvalued" or "undervalued" for investment, A false prediction could unfairly steer resources away from or toward a community based on an incomplete picture. I wouldn't consider this model appropriate for real financial decision-making as is; it's better suited as an exploratory tool for understanding broad national patterns, not as a decision engine for any single county.
 
 If I extended this project, I'd want to add housing supply data, regional cost-of-living indexes, and maybe historical trend data instead of a single snapshot year, since none of that is currently represented.
 
