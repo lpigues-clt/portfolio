@@ -1,6 +1,6 @@
 # 🏠 Predicting County Home Values from Income and Education
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 📋 Problem Definition
 
@@ -12,7 +12,7 @@ I picked this topic because income and home value get talked about together cons
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 📚 Background and Context
 
@@ -28,7 +28,7 @@ At the same time, housing economists have found that income and education variab
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 🗂️ Data Description
 
@@ -40,7 +40,7 @@ Missing values were minimal. Most counties report all four core variables, and t
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 🔍 Data Understanding and Exploration
 
@@ -54,7 +54,7 @@ This is exactly why I included Bachelors_Rate as its own feature rather than ass
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 🛠️ Data Preparation and Feature Selection
 
@@ -73,7 +73,7 @@ For training, I used an 80/20 train test split with a fixed random seed so resul
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## ⚙️ Baseline and Model Development
 
@@ -89,7 +89,7 @@ I didn't do extensive hyperparameter tuning beyond setting a reasonable tree dep
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 📊 Model Evaluation and Selection
 
@@ -111,7 +111,7 @@ Random Forest clearly outperformed both the baseline and Linear Regression on ev
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 🧠 Model Interpretation and Insights
 
@@ -131,7 +131,7 @@ The actual versus predicted plot shows the model tracking real home values close
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## ⚖️ Limitations, Ethics, and Reflection
 
@@ -143,7 +143,7 @@ If I extended this project, I would want to add housing supply data, regional co
 
 </div>
 
-<div class="card">
+<div class="card" markdown="1">
 
 ## 🔗 Code and Transparency
 
