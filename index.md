@@ -19,5 +19,6 @@ This website will document my learning and projects throughout the semester.
 ---
 ## Portfolio
 - [Blog](blog.md)
-- [Projects](projects.md)(ml-project.md)
-- 
+- [Projects](projects.md)
+- [Project Part 2](ml-project.md)
+  
